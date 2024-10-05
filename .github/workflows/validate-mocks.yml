@@ -1,0 +1,24 @@
+name: Validate Mock Files
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Validate JSON files
+        run: |
+          for file in mocks/*.json; do
+            echo "Validating $file"
+            cat $file | jq empty
+          done
