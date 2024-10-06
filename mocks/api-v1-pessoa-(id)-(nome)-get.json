@@ -1,0 +1,20 @@
+{
+    "headers": {
+        "Content-Type": "application/json"
+    },
+    "request": {
+        "params": {
+            "id": "2",
+            "nome": "jose"
+        }
+    },
+ 
+    "response": {
+        "status": 200,
+        "body": {
+            "id": "2",
+            "nome": "Maria"
+        }
+    }
+  }
+  
