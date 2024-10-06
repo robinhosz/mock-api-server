@@ -3,7 +3,7 @@ name: Deploy API Mock
 on:
   push:
     branches:
-      - '*'  # Isso vai acionar o workflow para qualquer branch
+      - '**'
 
 jobs:
   deploy:
@@ -15,14 +15,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # ou a versão que você estiver usando
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Deploy to Render
+      - name: Deploy to Render via Deploy Hook
         run: |
-          curl -X POST https://api.onrender.com/deploys \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-          -H "Content-Type: application/json" \
-          -d '{"serviceId": "${{ secrets.RENDER_SERVICE_ID }}", "branch": "${GITHUB_REF_NAME}"}'
+          curl -X POST https://api.render.com/deploy/srv-cs0pfu68ii6s73csheqg?key=u_S6pyUK0pg

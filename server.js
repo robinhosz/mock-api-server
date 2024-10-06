@@ -6,7 +6,9 @@ const app = express();
 
 app.use(express.json());
 
-const branchName = process.env.BRANCH_NAME || 'master';
+// Obtém o nome da branch a partir da variável de ambiente
+const branchName = process.env.BRANCH_NAME ? process.env.BRANCH_NAME.split('/').pop() : 'master';
+console.log(`Branch name being used: ${branchName}`);
 
 const getRouteFromFileName = (fileName) => {
   const parts = fileName.replace('.json', '').split('-');
@@ -28,11 +30,21 @@ const getRouteFromFileName = (fileName) => {
 
 const loadMocks = () => {
   try {
-    const mockFiles = fs.readdirSync(path.join(__dirname, 'mocks'));
+    const branchPath = path.join(__dirname, 'mocks', branchName); // Caminho da branch atual
+
+    // Verifica se a pasta da branch existe
+    if (!fs.existsSync(branchPath)) {
+      console.error(`❌ Branch folder does not exist: ${branchPath}`);
+      return [];
+    }
+
+    const mockFiles = fs.readdirSync(branchPath); // Listar arquivos na pasta da branch atual
+    console.log(`Files in branch path: ${mockFiles}`); // Listar arquivos encontrados
     let mocks = [];
+
     mockFiles.forEach(file => {
       if (file.endsWith('.json')) {
-        const mock = JSON.parse(fs.readFileSync(path.join(__dirname, 'mocks', file), 'utf-8'));
+        const mock = JSON.parse(fs.readFileSync(path.join(branchPath, file), 'utf-8'));
         const { route, method } = getRouteFromFileName(file);
 
         const validMethods = ['get', 'post', 'put', 'delete'];
