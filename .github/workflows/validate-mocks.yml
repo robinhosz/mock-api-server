@@ -1,28 +1,28 @@
-name: Deploy Node.js app
+name: Deploy API Mock
 
 on:
   push:
     branches:
-      - '*'
+      - '*'  # Isso vai acionar o workflow para qualquer branch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node.js
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
-      - run: npm install
+          node-version: '14'  # ou a versão que você estiver usando
 
-      - name: Set BRANCH_NAME
-        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
-        
+      - name: Install dependencies
+        run: npm install
+
       - name: Deploy to Render
         run: |
-          # Exemplo de como passar o nome da branch para o Render
-          curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            -d branch=${GITHUB_REF_NAME} \
-            -d other_params=values \
-            https://api.render.com/deploy...
+          curl -X POST https://api.onrender.com/deploys \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "${{ secrets.RENDER_SERVICE_ID }}", "branch": "${GITHUB_REF_NAME}"}'
