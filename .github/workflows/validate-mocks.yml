@@ -3,7 +3,7 @@ name: Deploy API Mock
 on:
   push:
     branches:
-      - '*'  # Isso vai acionar o workflow para qualquer branch
+      - '**'  # Isso vai acionar o workflow para qualquer branch
 
 jobs:
   deploy:
