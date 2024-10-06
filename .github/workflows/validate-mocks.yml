@@ -3,7 +3,7 @@ name: Deploy API Mock
 on:
   push:
     branches:
-      - '**'  # Acionar o workflow para qualquer branch
+      - '**'
 
 jobs:
   deploy:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'  # Ou a versão que você estiver usando
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
