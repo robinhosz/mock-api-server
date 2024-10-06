@@ -6,10 +6,12 @@ const app = express();
 
 app.use(express.json());
 
+const branchName = process.env.BRANCH_NAME || 'master';
+
 const getRouteFromFileName = (fileName) => {
   const parts = fileName.replace('.json', '').split('-');
   
-  let route = `/${parts.slice(0, -1).join('/')}`;
+  let route = `/${branchName}/${parts.slice(0, -1).join('/')}`;
   
   const paramRegex = /\(([^)]+)\)/g;
   let paramMatch;
@@ -81,7 +83,7 @@ const configureRoute = (route, method, mock) => {
 
     if (mock.query) {
       for (const key in mock.query) {
-        if (req.query[key] != mock.query[key]) { // Usar != para comparar strings e números
+        if (req.query[key] != mock.query[key]) {
           return res.status(400).json({ error: `Invalid query param: ${key}, expected: ${mock.query[key]}, got: ${req.query[key]}` });
         }
       }
