@@ -6,7 +6,8 @@ const app = express();
 
 app.use(express.json());
 
-const branchName = process.env.BRANCH_NAME || 'master';
+const branchName = process.env.BRANCH_NAME ? process.env.BRANCH_NAME.split('/').pop() : 'master';
+
 
 const getRouteFromFileName = (fileName) => {
   const parts = fileName.replace('.json', '').split('-');

@@ -21,6 +21,8 @@ jobs:
         run: npm install
 
       - name: Deploy to Render
+        env:
+          BRANCH_NAME: "${GITHUB_REF_NAME}"  # Definindo BRANCH_NAME
         run: |
           curl -X POST https://api.onrender.com/deploys \
           -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
