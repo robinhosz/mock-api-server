@@ -1,0 +1,21 @@
+{
+    "headers": {
+      "Content-Type": "application/json",
+      "cod": 123
+    },
+    "query": {
+      "codigo": 123
+    },
+    "request": {
+      "body": {
+        "id": 2,
+        "nome": "Maria"
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "Usuário criado com sucesso!"
+      }
+    }
+  }
