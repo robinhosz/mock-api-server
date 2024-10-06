@@ -8,7 +8,6 @@ app.use(express.json());
 
 const branchName = process.env.BRANCH_NAME ? process.env.BRANCH_NAME.split('/').pop() : 'master';
 
-
 const getRouteFromFileName = (fileName) => {
   const parts = fileName.replace('.json', '').split('-');
   
@@ -29,11 +28,13 @@ const getRouteFromFileName = (fileName) => {
 
 const loadMocks = () => {
   try {
-    const mockFiles = fs.readdirSync(path.join(__dirname, 'mocks'));
+    const branchPath = path.join(__dirname, 'mocks', branchName); // Caminho da branch atual
+    const mockFiles = fs.readdirSync(branchPath); // Listar arquivos na pasta da branch atual
     let mocks = [];
+
     mockFiles.forEach(file => {
       if (file.endsWith('.json')) {
-        const mock = JSON.parse(fs.readFileSync(path.join(__dirname, 'mocks', file), 'utf-8'));
+        const mock = JSON.parse(fs.readFileSync(path.join(branchPath, file), 'utf-8'));
         const { route, method } = getRouteFromFileName(file);
 
         const validMethods = ['get', 'post', 'put', 'delete'];
