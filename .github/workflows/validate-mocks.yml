@@ -18,9 +18,7 @@ jobs:
 
       - name: Set BRANCH_NAME
         run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
-
-      - run: npm run build
-
+        
       - name: Deploy to Render
         run: |
           # Exemplo de como passar o nome da branch para o Render
