@@ -1,0 +1,17 @@
+{
+    "request": {
+      "params": {
+        "id": "456"
+      },
+      "body": {
+        "name": "Jane Doe Updated",
+        "age": 31
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "message": "User updated successfully"
+      }
+    }
+  }

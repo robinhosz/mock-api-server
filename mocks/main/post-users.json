@@ -1,0 +1,19 @@
+{
+    "request": {
+      "body": {
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "age": 30
+      },
+      "headers": {
+        "Authorization": "Bearer abc123"
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "User created successfully",
+        "userId": "456"
+      }
+    }
+  }

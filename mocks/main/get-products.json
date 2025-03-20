@@ -1,0 +1,22 @@
+{
+    "request": {
+      "query": {
+        "category": "electronics"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "name": "Smartphone",
+          "price": 599.99
+        },
+        {
+          "id": 2,
+          "name": "Laptop",
+          "price": 1299.99
+        }
+      ]
+    }
+  }

@@ -1,0 +1,22 @@
+{
+    "request": {
+      "body": {
+        "name": "Jane Doe",
+        "age": 30
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "age": { "type": "number" }
+        },
+        "required": ["name", "age"]
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "User created successfully"
+      }
+    }
+  }

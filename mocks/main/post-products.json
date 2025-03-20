@@ -1,0 +1,23 @@
+{
+    "request": {
+      "body": {
+        "name": "Tablet",
+        "price": 299.99
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "price": { "type": "number" }
+        },
+        "required": ["name", "price"]
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "Product created successfully",
+        "productId": "789"
+      }
+    }
+  }

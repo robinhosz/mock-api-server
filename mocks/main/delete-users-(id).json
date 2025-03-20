@@ -1,0 +1,10 @@
+{
+    "request": {
+      "params": {
+        "id": "456"
+      }
+    },
+    "response": {
+      "status": 204
+    }
+  }

@@ -1,0 +1,13 @@
+{
+    "request": {
+      "params": {
+        "id": "789"
+      },
+      "headers": {
+        "Authorization": "Bearer xyz456"
+      }
+    },
+    "response": {
+      "status": 204
+    }
+  }

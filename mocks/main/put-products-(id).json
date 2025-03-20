@@ -1,0 +1,20 @@
+{
+    "request": {
+      "params": {
+        "id": "789"
+      },
+      "body": {
+        "name": "Tablet Updated",
+        "price": 349.99
+      },
+      "headers": {
+        "Authorization": "Bearer xyz456"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "message": "Product updated successfully"
+      }
+    }
+  }

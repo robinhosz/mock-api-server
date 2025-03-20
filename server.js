@@ -1,20 +1,45 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const yaml = require('js-yaml');
+const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const { validate } = require('jsonschema');
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-// Obtém o nome da branch a partir da variável de ambiente
-const branchName = process.env.BRANCH_NAME ? process.env.BRANCH_NAME.split('/').pop() : 'master';
-console.log(`Branch name being used: ${branchName}`);
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
-const getRouteFromFileName = (fileName) => {
-  const parts = fileName.replace('.json', '').split('-');
-  
-  let route = `/${branchName}/${parts.slice(0, -1).join('/')}`;
-  
+const getRouteFromFileName = (fileName, branchName) => {
+  const parts = fileName.replace('.json', '').replace('.yaml', '').split('-');
+
+  // Inferir o método HTTP com base no prefixo do nome do arquivo
+  let method = parts[0].toLowerCase(); // Pega o primeiro elemento (ex: "get", "post")
+  const validMethods = ['get', 'post', 'put', 'delete'];
+
+  // Se o método não for válido, tenta extrair o método do final do nome do arquivo
+  if (!validMethods.includes(method)) {
+    method = parts.pop().toLowerCase(); // Tenta pegar o último elemento como método
+  }
+
+  // Verifica se o método é válido
+  if (!validMethods.includes(method)) {
+    console.error(`❌ Invalid method in file name: ${fileName}`);
+    return null;
+  }
+
+  // Constrói a rota
+  let route = `/${branchName}/${parts.slice(1).join('/')}`;
+
+  // Substitui parâmetros dinâmicos (ex: (id)) por :id
   const paramRegex = /\(([^)]+)\)/g;
   let paramMatch;
 
@@ -23,41 +48,58 @@ const getRouteFromFileName = (fileName) => {
     route = route.replace(`(${paramName})`, `:${paramName}`);
   }
 
-  const method = parts.pop();
-
-  return { route, method: method.toLowerCase() };
+  return { route, method };
 };
 
 const loadMocks = () => {
   try {
-    const branchPath = path.join(__dirname, 'mocks', branchName); // Caminho da branch atual
+    const mocksPath = path.join(__dirname, 'mocks'); // Caminho base para a pasta mocks
 
-    // Verifica se a pasta da branch existe
-    if (!fs.existsSync(branchPath)) {
-      console.error(`❌ Branch folder does not exist: ${branchPath}`);
+    // Verifica se a pasta mocks existe
+    if (!fs.existsSync(mocksPath)) {
+      console.error(`❌ Mocks folder does not exist: ${mocksPath}`);
       return [];
     }
 
-    const mockFiles = fs.readdirSync(branchPath); // Listar arquivos na pasta da branch atual
-    console.log(`Files in branch path: ${mockFiles}`); // Listar arquivos encontrados
+    // Lista todas as pastas dentro de mocks
+    const branches = fs.readdirSync(mocksPath, { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+
+    console.log(`Branches found: ${branches.join(', ')}`);
+
     let mocks = [];
 
-    mockFiles.forEach(file => {
-      if (file.endsWith('.json')) {
-        const mock = JSON.parse(fs.readFileSync(path.join(branchPath, file), 'utf-8'));
-        const { route, method } = getRouteFromFileName(file);
+    branches.forEach(branch => {
+      const branchPath = path.join(mocksPath, branch); // Caminho da branch atual
+      const mockFiles = fs.readdirSync(branchPath); // Listar arquivos na pasta da branch atual
 
-        const validMethods = ['get', 'post', 'put', 'delete'];
-        if (validMethods.includes(method)) {
-          console.log(`✔️ Route loaded: ${method.toUpperCase()} ${route}`);
-          mocks.push({ route, method, mock });
+      console.log(`Files in branch "${branch}": ${mockFiles.join(', ')}`);
+
+      mockFiles.forEach(file => {
+        if (file.endsWith('.json') || file.endsWith('.yaml')) {
+          const filePath = path.join(branchPath, file);
+
+          try {
+            const fileContent = fs.readFileSync(filePath, 'utf-8');
+            const mock = file.endsWith('.json') ? JSON.parse(fileContent) : yaml.load(fileContent);
+
+            const routeInfo = getRouteFromFileName(file, branch);
+
+            if (routeInfo) {
+              const { route, method } = routeInfo;
+              console.log(`✔️ Route loaded: ${method.toUpperCase()} ${route}`);
+              mocks.push({ route, method, mock });
+            }
+          } catch (error) {
+            console.error(`❌ Error parsing file ${file}:`, error.message);
+          }
         } else {
-          console.error(`❌ Invalid method in file name: ${file}`);
+          console.log(`⚠️ Skipped non-JSON/YAML file: ${file}`);
         }
-      } else {
-        console.log(`⚠️ Skipped non-JSON file: ${file}`);
-      }
+      });
     });
+
     return mocks;
   } catch (error) {
     console.error('❌ Error loading mocks:', error);
@@ -74,6 +116,14 @@ const configureRoute = (route, method, mock) => {
     console.log('Request Query:', req.query);
     console.log('Request Body:', req.body);
     console.log('Request Headers:', req.headers);
+
+    // Validate request schema if provided
+    if (mock.request && mock.request.schema) {
+      const validationResult = validate(req.body, mock.request.schema);
+      if (!validationResult.valid) {
+        return res.status(400).json({ error: 'Invalid request body', details: validationResult.errors });
+      }
+    }
 
     res.set(mock.headers || { 'Content-Type': 'application/json' });
 
