@@ -10,27 +10,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      
+    
       - name: Checkout code
         uses: actions/checkout@v3
 
-      
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-     
       - name: Install dependencies
         run: npm install
 
-     
       - name: Get version from package.json
         id: version
         run: |
           echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      
       - name: Check if tag exists
         id: check-tag
         run: |
@@ -45,17 +41,18 @@ jobs:
 
       - name: Create Release
         if: steps.check-tag.outputs.tag_exists == 'false'
+        id: create-release
         uses: actions/create-release@v1
         with:
           tag_name: v${{ steps.version.outputs.VERSION }}
           release_name: Release v${{ steps.version.outputs.VERSION }}
           draft: false
           prerelease: false
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip project
+        if: steps.check-tag.outputs.tag_exists == 'false'
         run: zip -r virtualizacao-services.zip ./
 
       - name: Upload Artifacts
