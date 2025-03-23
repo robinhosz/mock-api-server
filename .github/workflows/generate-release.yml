@@ -12,7 +12,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      
+
     steps:
 
       - name: Checkout code
@@ -58,12 +58,3 @@ jobs:
       - name: Zip project
         if: steps.check-tag.outputs.tag_exists == 'false'
         run: zip -r virtualizacao-services.zip ./
-
-      - name: Upload Artifacts
-        if: steps.check-tag.outputs.tag_exists == 'false'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./virtualizacao-services.zip
-          asset_name: virtualizacao-services.zip
-          asset_content_type: application/zip
