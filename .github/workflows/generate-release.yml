@@ -3,7 +3,7 @@ name: Auto Release
 on:
   push:
     branches:
-      - main # Altere para a branch principal (ex: main, master)
+      - master
 
 jobs:
   create-release:
