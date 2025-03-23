@@ -3,7 +3,7 @@ name: Auto Release
 on:
   push:
     branches:
-      - master
+      - main # Altere para a branch principal (ex: main, master)
 
 jobs:
   create-release:
@@ -13,15 +13,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14.0
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
       - name: Get version from package.json
         id: version
         run: |
           echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Build project
-        run: |
-          npm install
-          npm run build
 
       - name: Create Release
         id: create-release
@@ -39,6 +45,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./dist/my-app.zip
-          asset_name: my-app.zip
+          asset_path: ./
+          asset_name: virtualizacao-services.zip
           asset_content_type: application/zip

@@ -4,19 +4,20 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install",
     "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robinhosz/virtualizacao-services.git"
+    "url": "git+https://github.com/robinhosz/mock-api-server.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/robinhosz/virtualizacao-services/issues"
+    "url": "https://github.com/robinhosz/mock-api-server/issues"
   },
-  "homepage": "https://github.com/robinhosz/virtualizacao-services#readme",
+  "homepage": "https://github.com/robinhosz/mock-api-server#readme",
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
