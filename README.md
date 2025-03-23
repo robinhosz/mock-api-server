@@ -1,4 +1,4 @@
-# Virtualização de APIs com Node.js
+# Virtualização de APIs
 
 Este projeto é um servidor de mock (simulação) de APIs desenvolvido em Node.js. Ele permite criar APIs virtuais a partir de arquivos JSON ou YAML, simulando requisições e respostas HTTP sem a necessidade de um backend real. É ideal para testes de integração, desenvolvimento frontend e cenários onde você precisa simular comportamentos de APIs.
 
