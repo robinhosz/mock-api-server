@@ -11,35 +11,29 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
 });
 app.use(limiter);
 
 const getRouteFromFileName = (fileName, branchName) => {
   const parts = fileName.replace('.json', '').replace('.yaml', '').split('-');
 
-  // Inferir o método HTTP com base no prefixo do nome do arquivo
-  let method = parts[0].toLowerCase(); // Pega o primeiro elemento (ex: "get", "post")
+  let method = parts[0].toLowerCase();
   const validMethods = ['get', 'post', 'put', 'delete'];
 
-  // Se o método não for válido, tenta extrair o método do final do nome do arquivo
   if (!validMethods.includes(method)) {
-    method = parts.pop().toLowerCase(); // Tenta pegar o último elemento como método
+    method = parts.pop().toLowerCase();
   }
 
-  // Verifica se o método é válido
   if (!validMethods.includes(method)) {
     console.error(`❌ Invalid method in file name: ${fileName}`);
     return null;
   }
 
-  // Constrói a rota
   let route = `/${branchName}/${parts.slice(1).join('/')}`;
 
-  // Substitui parâmetros dinâmicos (ex: (id)) por :id
   const paramRegex = /\(([^)]+)\)/g;
   let paramMatch;
 
@@ -53,15 +47,13 @@ const getRouteFromFileName = (fileName, branchName) => {
 
 const loadMocks = () => {
   try {
-    const mocksPath = path.join(__dirname, 'mocks'); // Caminho base para a pasta mocks
+    const mocksPath = path.join(__dirname, 'mocks');
 
-    // Verifica se a pasta mocks existe
     if (!fs.existsSync(mocksPath)) {
       console.error(`❌ Mocks folder does not exist: ${mocksPath}`);
       return [];
     }
 
-    // Lista todas as pastas dentro de mocks
     const branches = fs.readdirSync(mocksPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
@@ -71,8 +63,8 @@ const loadMocks = () => {
     let mocks = [];
 
     branches.forEach(branch => {
-      const branchPath = path.join(mocksPath, branch); // Caminho da branch atual
-      const mockFiles = fs.readdirSync(branchPath); // Listar arquivos na pasta da branch atual
+      const branchPath = path.join(mocksPath, branch);
+      const mockFiles = fs.readdirSync(branchPath);
 
       console.log(`Files in branch "${branch}": ${mockFiles.join(', ')}`);
 
@@ -117,7 +109,6 @@ const configureRoute = (route, method, mock) => {
     console.log('Request Body:', req.body);
     console.log('Request Headers:', req.headers);
 
-    // Validate request schema if provided
     if (mock.request && mock.request.schema) {
       const validationResult = validate(req.body, mock.request.schema);
       if (!validationResult.valid) {
