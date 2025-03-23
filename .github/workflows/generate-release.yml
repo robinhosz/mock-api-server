@@ -45,7 +45,7 @@ jobs:
 
       - name: Create Release
         if: steps.check-tag.outputs.tag_exists == 'false'
-        uses: actions/create-release@v2
+        uses: actions/create-release@v1
         with:
           tag_name: v${{ steps.version.outputs.VERSION }}
           release_name: Release v${{ steps.version.outputs.VERSION }}
