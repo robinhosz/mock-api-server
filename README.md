@@ -81,6 +81,132 @@ Arquivo: `get-users-(id)-get.json`
 }
 ```
 
+### 2. POST com Body e Headers
+
+Arquivo: `post-users.json`
+
+```json
+{
+    "request": {
+      "body": {
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com",
+        "age": 30
+      },
+      "headers": {
+        "Authorization": "Bearer abc123"
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "User created successfully",
+        "userId": "456"
+      }
+    }
+}
+```
+
+### 3. PUT com Body e Params
+
+Arquivo: `put-users-(id).json`
+
+```json
+{
+    "request": {
+      "params": {
+        "id": "456"
+      },
+      "body": {
+        "name": "Jane Doe Updated",
+        "age": 31
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": {
+        "message": "User updated successfully"
+      }
+    }
+}
+```
+
+### 3. DELETE com params
+
+Arquivo: `delete-users-(id).json`
+
+```json
+{
+    "request": {
+      "params": {
+        "id": "456"
+      }
+    },
+    "response": {
+      "status": 204
+    }
+}
+```
+
+### 4. POST com body e schema registry
+
+Arquivo: `post-products.json`
+
+```json
+{
+    "request": {
+      "body": {
+        "name": "Tablet",
+        "price": 299.99
+      },
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "price": { "type": "number" }
+        },
+        "required": ["name", "price"]
+      }
+    },
+    "response": {
+      "status": 201,
+      "body": {
+        "message": "Product created successfully",
+        "productId": "789"
+      }
+    }
+}
+```
+
+### 5. GET com Params e Query
+
+Arquivo: `get-products.json`
+
+```json
+{
+    "request": {
+      "query": {
+        "category": "electronics"
+      }
+    },
+    "response": {
+      "status": 200,
+      "body": [
+        {
+          "id": 1,
+          "name": "Smartphone",
+          "price": 599.99
+        },
+        {
+          "id": 2,
+          "name": "Laptop",
+          "price": 1299.99
+        }
+      ]
+    }
+}
+```
+
 ## Como Contribuir
 
 Contribuições são bem-vindas! Por favor, leia as diretrizes detalhadas no arquivo [CONTRIBUTING.md](https://github.com/robinhosz/mock-api-server/blob/master/CONTRIBUTING.md).
