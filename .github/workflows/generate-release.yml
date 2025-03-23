@@ -16,13 +16,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.14.0
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
-
-      - name: Build project
-        run: npm run build
 
       - name: Get version from package.json
         id: version
@@ -41,10 +38,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Zip project
+        run: zip -r virtualizacao-services.zip ./
+
       - name: Upload Artifacts
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./
+          asset_path: ./virtualizacao-services.zip
           asset_name: virtualizacao-services.zip
           asset_content_type: application/zip
