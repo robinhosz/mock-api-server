@@ -31,8 +31,8 @@ O servidor carrega automaticamente todos os arquivos da pasta mocks e configura 
 1. Clone o repositório:
 
     ```bash
-    git clone https://github.com/seu-usuario/virtualizacao-services.git
-    cd virtualizacao-services
+    git clone https://github.com/robinhosz/mock-api-server.git
+    cd mock-api-server
     ```
 
 2. Instale as dependências:
@@ -79,3 +79,12 @@ Arquivo: `get-users-(id)-get.json`
     }
   }
 }
+```
+
+## Como Contribuir
+
+Contribuições são bem-vindas! Por favor, leia as diretrizes detalhadas no arquivo [CONTRIBUTING.md](https://github.com/robinhosz/mock-api-server/blob/master/CONTRIBUTING.md).
+
+## Licença
+
+Este projeto está licenciado sob a [GNU General Public License v3.0](https://github.com/robinhosz/mock-api-server/blob/master/LICENSE).
