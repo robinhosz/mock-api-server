@@ -8,4 +8,4 @@ Obrigado por querer contribuir para este projeto! Siga os passos abaixo:
 4. Envie para o seu fork: `git push origin minha-feature`.
 5. Após isso um PR Automático vai ser gerado e o CodeOwner do projeto vai revisar a sua contribuição.
 
-Certifique-se de que seu PR segue as diretrizes do projeto e passa em todos os testes.
+Certifique-se de que seu PR segue as diretrizes do projeto e passa em todos os steps da pipeline.
